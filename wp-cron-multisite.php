@@ -17,6 +17,17 @@ echo "Running Crons: " . PHP_EOL;
 $agent = 'WordPress/' . $wp_version . '; ' . home_url();
 // $time  = time();
 
+$networkUrl = network_site_url();
+$command = $networkUrl . 'wpsite/wp-cron.php?doing_wp_cron'; // =' . $time . '&ver=' . $wp_version;
+$ch = curl_init( $command );
+$rc = curl_setopt( $ch, CURLOPT_RETURNTRANSFER, false );
+$rc = curl_exec( $ch );
+curl_close( $ch );
+
+print_r( $rc );
+print_r( "\t OK " . $command . PHP_EOL );
+add_log( $command . "\t" . $rc );
+
 foreach ( $blogs as $blog ) {
     $domain  = $gt_4_6 ? $blog->domain : $blog['domain'];
     $path    = $gt_4_6 ? $blog->path : $blog['path'];
